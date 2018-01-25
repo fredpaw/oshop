@@ -1,7 +1,3 @@
-import { AdminAuthGuard } from './admin-auth-guard.service';
-import { UserService } from './user.service';
-import { AuthGuard } from './auth-guard.service';
-import { AuthService } from './auth.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -9,7 +5,11 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { CustomFormsModule } from 'ng2-validation';
+// import { DataTableModule } from 'angular-4-data-table/src/index';
 
+import { routes } from './app.routes';
 
 import { AppComponent } from './app.component';
 import { environment } from './../environments/environment';
@@ -23,7 +23,15 @@ import { MyOrdersComponent } from './my-orders/my-orders.component';
 import { AdminProductsComponent } from './admin/admin-products/admin-products.component';
 import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
 import { LoginComponent } from './login/login.component';
-import { routes } from './app.routes';
+import { ProductFormComponent } from './admin/product-form/product-form.component';
+
+import { ProductService } from './product.service';
+import { CategoryService } from './category.service';
+import { AdminAuthGuard } from './admin-auth-guard.service';
+import { UserService } from './user.service';
+import { AuthGuard } from './auth-guard.service';
+import { AuthService } from './auth.service';
+
 
 
 @NgModule({
@@ -38,10 +46,14 @@ import { routes } from './app.routes';
     MyOrdersComponent,
     AdminProductsComponent,
     AdminOrdersComponent,
-    LoginComponent
+    LoginComponent,
+    ProductFormComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    CustomFormsModule,
+    // DataTableModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
@@ -53,6 +65,8 @@ import { routes } from './app.routes';
     AuthGuard,
     AdminAuthGuard,
     UserService,
+    CategoryService,
+    ProductService,
   ],
   bootstrap: [AppComponent]
 })
