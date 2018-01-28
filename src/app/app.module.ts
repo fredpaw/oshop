@@ -1,3 +1,4 @@
+import { ShoppingCartService } from './shopping-cart.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -71,6 +72,7 @@ import { ProductCardComponent } from './product-card/product-card.component';
     UserService,
     CategoryService,
     ProductService,
+    ShoppingCartService,
   ],
   bootstrap: [AppComponent]
 })
