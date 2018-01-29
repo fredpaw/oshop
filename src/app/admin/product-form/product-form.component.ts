@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+import { Product } from './../../models/product';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProductService } from './../../product.service';
 import { CategoryService } from './../../category.service';
@@ -11,7 +13,7 @@ import 'rxjs/add/operator/take';
 })
 export class ProductFormComponent implements OnInit {
   categories$;
-  product;
+  product = new Product();
   id;
 
   constructor(private categoryService: CategoryService,
@@ -22,7 +24,8 @@ export class ProductFormComponent implements OnInit {
 
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
-      this.productService.get(this.id).take(1).subscribe(p => this.product = p);
+      let prodRef: Observable<any> = this.productService.get(this.id).take(1);
+      prodRef.subscribe(p => this.product = p);
     }
   }
 

@@ -15,7 +15,7 @@ import 'rxjs/add/operator/switchMap';
 })
 export class ProductsComponent implements OnDestroy, OnInit {
   products: Product[] = [];
-  filteredProducts: Product[];
+  filteredProducts: Product[] = [];
   cart: any;
   category: string;
   pSubscription: Subscription;
@@ -47,7 +47,7 @@ export class ProductsComponent implements OnDestroy, OnInit {
   }
 
   async ngOnInit() {
-    this.cSubscription = (await this.shoppingCartService.getCart()).valueChanges().subscribe( cart => this.cart = cart);
+    this.cSubscription = (await this.shoppingCartService.getCart()).subscribe( cart => this.cart = cart);
   }
 
   ngOnDestroy() {
