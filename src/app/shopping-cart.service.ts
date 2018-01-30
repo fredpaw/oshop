@@ -12,16 +12,29 @@ export class ShoppingCartService {
 
   constructor(private db: AngularFireDatabase) { }
 
+  async getCart(): Promise<Observable<ShoppingCart>> {
+    let cartId = await this.getOrCreateCartId();
+    let cartRef: Observable<any> = this.db.object('/shopping-carts/' + cartId).valueChanges();
+    return cartRef.map(x => new ShoppingCart(x.items));
+  }
+
+  async addToCart(product: Product) {
+    this.updateItem(product, 1);
+  }
+
+  async removeFromCart(product: Product) {
+    this.updateItem(product, -1);
+  }
+
+  async clearCart() {
+    let cartId = await this.getOrCreateCartId();
+    this.db.object('/shopping-carts/' + cartId + '/items').remove();
+  }
+
   private create() {
     return this.db.list('/shopping-carts').push({
       dataCreated: new Date().getTime()
     });
-  }
-
-  async getCart(): Promise<Observable<ShoppingCart>> {
-    let cartId = await this.getOrCreateCartId();
-    let cartRef: Observable<any> = this.db.object('/shopping-carts/' + cartId).valueChanges()
-    return cartRef.map(x => new ShoppingCart(x.items));
   }
 
   private getItem(cartId: string, productId: string) {
@@ -37,19 +50,20 @@ export class ShoppingCartService {
     return result.key;
   }
 
-  async addToCart(product: Product) {
-    this.updateItemQuantity(product, 1);
-  }
-
-  async removeFromCart(product: Product) {
-    this.updateItemQuantity(product, -1);
-  }
-
-  private async updateItemQuantity(product: Product, change: number) {
+  private async updateItem(product: Product, change: number) {
     let cartId = await this.getOrCreateCartId();
     let item$ = this.getItem(cartId, product.key);
-    item$.snapshotChanges().take(1).map(item => {return item}).subscribe(item => {
-      item$.update({product: product, quantity: (item.payload.val() ? item.payload.val().quantity : 0) + change });
+    item$.snapshotChanges().take(1).subscribe(item => {
+      let quantity = (item.payload.val() ? item.payload.val().quantity : 0) + change;
+      if (quantity === 0) item$.remove();
+      else {
+        item$.update({
+          title: product.title,
+          price: product.price,
+          imageUrl: product.imageUrl,
+          quantity: quantity
+        });
+      }
     });
   }
 

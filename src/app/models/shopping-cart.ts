@@ -4,10 +4,12 @@ import { ShoppingCartItem } from './shopping-cart-item';
 export class ShoppingCart {
   items: ShoppingCartItem[] = [];
 
-  constructor(public itemsMap: {[key: string] : ShoppingCartItem} = {}) {
-    for(let productId in itemsMap) {
+  constructor(private itemsMap: {[key: string]: ShoppingCartItem}) {
+    this.itemsMap = itemsMap || {};
+
+    for (let productId in itemsMap) {
       let item = itemsMap[productId];
-      this.items.push(new ShoppingCartItem(item.product, item.quantity));
+      this.items.push(new ShoppingCartItem({...item, key: productId}));
     }
   }
 
